@@ -1,7 +1,7 @@
 
 
 import { pgTable, text, uuid, timestamp } from "drizzle-orm/pg-core";
-import { desc, relations } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 
 
 export const users = pgTable("users", {
