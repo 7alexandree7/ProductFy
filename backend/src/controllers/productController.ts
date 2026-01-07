@@ -40,3 +40,26 @@ export const getMyProducts = async (req: Request, res: Response) => {
         res.status(500).json({ error: "dont have any product" });
     }
 }
+
+
+export const createProduct = async (req: Request, res: Response) => {
+    try {
+        const {userId} = getAuth(req);
+        if(!userId) return res.status(400).json({ error: "not authorized" });
+
+        const {title, description, imageUrl} = req.body;
+        if(!title || !description || !imageUrl) return res.status(400).json({ error: "title or description or imageUrl not found" });
+
+        const newProduct = await queries.createProduct({
+            title,
+            description,
+            imageUrl,
+            userId
+        })
+
+        res.status(201).json(newProduct);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "falled to create product" });
+    }
+}
