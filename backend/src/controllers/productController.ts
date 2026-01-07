@@ -77,8 +77,28 @@ export const updateProduct = async (req: Request, res: Response) => {
     const existingProduct = await queries.getProductById(id)
     if (!existingProduct) return res.status(404).json({ error: `product with id ${id} not found` });
 
-    if(existingProduct.userId !== userId) return res.status(403).json({ error: "you are not the owner of this product" });
+    if (existingProduct.userId !== userId) return res.status(403).json({ error: "you are not the owner of this product" });
 
     const updateProduct = await queries.updateProduct(id, { title, description, imageUrl });
     res.status(200).json(updateProduct);
+}
+
+
+export const deleteProduct = async (req: Request, res: Response) => {
+    try {
+        const { userId } = getAuth(req);
+        if (!userId) return res.status(400).json({ error: "not authorized" });
+
+        const { id } = req.params
+        const existingProduct = await queries.getProductById(id)
+        if (!existingProduct) return res.status(404).json({ error: `product with id ${id} not found` });
+
+        if (existingProduct.userId !== userId) return res.status(403).json({ error: "you are not the owner of this product" });
+
+        const deleteProduct = await queries.deleteProduct(id);
+        res.status(200).json(deleteProduct);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "falled to delete product" });
+    }
 }
