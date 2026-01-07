@@ -44,11 +44,11 @@ export const getMyProducts = async (req: Request, res: Response) => {
 
 export const createProduct = async (req: Request, res: Response) => {
     try {
-        const {userId} = getAuth(req);
-        if(!userId) return res.status(400).json({ error: "not authorized" });
+        const { userId } = getAuth(req);
+        if (!userId) return res.status(400).json({ error: "not authorized" });
 
-        const {title, description, imageUrl} = req.body;
-        if(!title || !description || !imageUrl) return res.status(400).json({ error: "title or description or imageUrl not found" });
+        const { title, description, imageUrl } = req.body;
+        if (!title || !description || !imageUrl) return res.status(400).json({ error: "title or description or imageUrl not found" });
 
         const newProduct = await queries.createProduct({
             title,
@@ -62,4 +62,23 @@ export const createProduct = async (req: Request, res: Response) => {
         console.error(error);
         res.status(500).json({ error: "falled to create product" });
     }
+}
+
+
+export const updateProduct = async (req: Request, res: Response) => {
+
+    const { userId } = getAuth(req);
+    if (!userId) return res.status(400).json({ error: "not authorized" });
+
+    const { id } = req.params;
+    const { title, description, imageUrl } = req.body;
+    if (!title || !description || !imageUrl) return res.status(400).json({ error: "title or description or imageUrl not found" });
+
+    const existingProduct = await queries.getProductById(id)
+    if (!existingProduct) return res.status(404).json({ error: `product with id ${id} not found` });
+
+    if(existingProduct.userId !== userId) return res.status(403).json({ error: "you are not the owner of this product" });
+
+    const updateProduct = await queries.updateProduct(id, { title, description, imageUrl });
+    res.status(200).json(updateProduct);
 }

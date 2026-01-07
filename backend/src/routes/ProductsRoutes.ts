@@ -8,5 +8,6 @@ router.get("/", productController.getAllProducts)
 router.get("/:id", productController.getProductById)
 router.get("/my", requireAuth(), productController.getMyProducts)
 router.post("/", requireAuth(), productController.createProduct)
+router.put("/:id", requireAuth(), productController.updateProduct)
 
 export default router
