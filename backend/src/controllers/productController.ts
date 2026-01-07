@@ -27,3 +27,16 @@ export const getProductById = async (req: Request, res: Response) => {
     }
 
 }
+
+export const getMyProducts = async (req: Request, res: Response) => {
+    try {
+        const { userId } = getAuth(req);
+        if (!userId) return res.status(400).json({ error: "Unauthorized" });
+
+        const myProduct = await queries.getProductsByUserId(userId);
+        res.status(200).json(myProduct);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "dont have any product" });
+    }
+}

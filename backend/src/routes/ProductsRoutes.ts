@@ -6,5 +6,6 @@ const router = Router();
 
 router.get("/", productController.getAllProducts)
 router.get("/:id", productController.getProductById)
+router.get("/my", requireAuth(), productController.getMyProducts)
 
 export default router
