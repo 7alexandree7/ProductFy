@@ -5,7 +5,7 @@ import { clerkMiddleware } from '@clerk/express'
 
 import userRoutes from './routes/userRoutes'
 import productRoutes from './routes/ProductsRoutes'
-import commentRoutes from './routes/commentRoutes'
+import commentRoutes from './routes/commentsRouter'
 
 const app = express();
 
